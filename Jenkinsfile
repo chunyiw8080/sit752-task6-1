@@ -12,8 +12,6 @@ pipeline {
             steps {
                 echo 'Fetch the source code from the directory path specified by the environment variable'
                 echo "Directory Path: ${env.DIRECTORY_PATH}"
-            }
-            steps {
                 echo 'Compile the code and generate any necessary artefacts'
             }
         }
