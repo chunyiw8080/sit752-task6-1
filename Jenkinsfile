@@ -12,6 +12,8 @@ pipeline {
             steps {
                 echo 'Fetch the source code from the directory path specified by the environment variable'
                 echo "Directory Path: ${env.DIRECTORY_PATH}"
+            }
+            steps {
                 echo 'Compile the code and generate any necessary artefacts'
             }
         }
@@ -37,7 +39,7 @@ pipeline {
 
         stage('Approval') {
             steps {
-                echo 'Waiting for manual approval (simulated with sleep 10s)...'
+                echo 'Waiting for manual approval ...'
                 sleep time: 10, unit: 'SECONDS'
             }
         }
