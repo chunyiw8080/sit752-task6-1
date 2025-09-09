@@ -1,50 +1,18 @@
 pipeline {
     agent any
 
-    environment {
-        DIRECTORY_PATH = "/var/lib/jenkins/workspace/node-http-app"
-        TESTING_ENVIRONMENT = "staging"
-        PRODUCTION_ENVIRONMENT = "production"
+    triggers {
+        pollSCM('H/1 * * * *')
     }
 
     stages {
-        stage('Build') {
+        stage('Deploy to Staging') {
             steps {
-                echo 'Fetch the source code from the directory path specified by the environment variable'
-                echo "Directory Path: ${env.DIRECTORY_PATH}"
-                echo 'Compile the code and generate any necessary artefacts'
-            }
-        }
+                echo "Deploying application to production server (10.0.0.11)..."
+                sh 'scp -r * root@10.0.0.11:/var/www/nodeapp'
+                sh 'ssh root@10.0.0.11 "chmod +x \'/var/www/nodeapp/deploy.sh\'"'
+                sh 'ssh root@10.0.0.11 "bash -l -c \'/var/www/nodeapp/deploy.sh\'"'
 
-        stage('Test') {
-            steps {
-                echo 'Unit tests'
-                echo 'Integration tests'
-            }
-        }
-
-        stage('Code Quality Check') {
-            steps {
-                echo 'Check the quality of the code'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo "Deploy the application to a testing environment specified by the environment variable: ${env.TESTING_ENVIRONMENT}"
-            }
-        }
-
-        stage('Approval') {
-            steps {
-                echo 'Waiting for manual approval ...'
-                sleep time: 10, unit: 'SECONDS'
-            }
-        }
-
-        stage('Deploy to Production') {
-            steps {
-                echo "Deploying the code to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
             }
         }
     }
