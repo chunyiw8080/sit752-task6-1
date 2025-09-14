@@ -37,10 +37,15 @@ pipeline {
     }
     post {
             always {
+                def logText = currentBuild.rawBuild.getLog(1000).join('\n')
                 mail(
                     to: "973321662@qq.com",
                     subject: "${currentBuild.fullDisplayName} - ${currentBuild.result}",
-                    body: "Build finished with status: ${currentBuild.result}\nConsole output: ${env.BUILD_URL}console"
+                    body: """Build Result: ${currentBuild.result}
+
+Console Output:
+${logText}
+"""
                 )
             }
         }
