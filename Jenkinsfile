@@ -10,19 +10,19 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 sh 'npm install'
-                sh '/var/lib/jenkins/.nvm/versions/node/v20.19.5/bin/npm test'
+                sh 'npm test'
             }
         }
         stage('Code Analysis') {
             steps {
                 echo 'Running ESLint for code analysis...'
-                sh '/var/lib/jenkins/.nvm/versions/node/v20.19.5/bin/npx eslint . && echo "Code Analysis Complete"'
+                sh 'npx eslint . && echo "Code Analysis Complete"'
             }
         }
         stage('Security Scan') {
             steps {
                 echo 'Running code analysis with npm audit...'
-                sh '/var/lib/jenkins/.nvm/versions/node/v20.19.5/bin/npm audit'
+                sh 'npm audit'
             }
         }
         stage('Deploy to Staging') {
@@ -37,19 +37,14 @@ pipeline {
     }
     post {
         always {
-            script {
-                // 获取完整日志
-                def logText = currentBuild.rawBuild.getLog(1000).join('\n')
-                mail(
-                    to: "user@example.com",
-                    subject: "${currentBuild.fullDisplayName} - ${currentBuild.result}",
-                    body: """Build Result: ${currentBuild.result}
-
-Console Output:
-${logText}
-"""
-                )
-            }
+            emailext(
+                subject: "${currentBuild.fullDisplayName} - ${currentBuild.result}",
+                body: """Build Result: ${currentBuild.result}
+    Console Output:
+    ${env.BUILD_URL}console
+    """,
+                to: "973321662@qq.com"
+            )
         }
     }
 }
