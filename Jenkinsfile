@@ -37,13 +37,10 @@ pipeline {
     }
     post {
         always {
-            emailext(
+            mail(
+                to: "973321662@qq.com",
                 subject: "${currentBuild.fullDisplayName} - ${currentBuild.result}",
-                body: """Build Result: ${currentBuild.result}
-    Console Output:
-    ${env.BUILD_URL}console
-    """,
-                to: "973321662@qq.com"
+                body: "Build finished with status: ${currentBuild.result}\nConsole output: ${env.BUILD_URL}console"
             )
         }
     }
