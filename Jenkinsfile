@@ -36,10 +36,12 @@ pipeline {
         
     }
     post {
-            always {
+        always {
+            script {
+                // 获取完整日志
                 def logText = currentBuild.rawBuild.getLog(1000).join('\n')
                 mail(
-                    to: "973321662@qq.com",
+                    to: "user@example.com",
                     subject: "${currentBuild.fullDisplayName} - ${currentBuild.result}",
                     body: """Build Result: ${currentBuild.result}
 
@@ -49,4 +51,5 @@ ${logText}
                 )
             }
         }
+    }
 }
